@@ -13,19 +13,86 @@
     <link rel="icon" type="image/svg+xml" href="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxOTIiIGhlaWdodD0iMTkyIiB2aWV3Qm94PSIwIDAgMTkyIDE5MiI+PHJlY3Qgd2lkdGg9IjE5MiIgaGVpZ2h0PSIxOTIiIGZpbGw9IiMwMDQ0ODEiLz48dGV4dCB4PSI1MCUiIHk9IjU1JSIgZG9taW5hbnQtYmFzZWxpbmU9Im1pZGRsZSIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZm9udC1mYW1pbHk9InNhbnMtc2VyaWYiIGZvbnQtd2VpZ2h0PSJib2xkIiBmb250LXNpemU9IjUwIiBmaWxsPSJ3aGl0ZSI+QkJWQTwvdGV4dD48L3N2Zz4=">
 
     <style>
-        /* Un fondo azul limpio mientras carga */
-        body { background-color: #004481; display: flex; justify-content: center; align-items: center; height: 100vh; margin: 0; color: white; font-family: sans-serif; }
+        body { 
+            background-color: #004481; 
+            color: white; 
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            display: flex; 
+            flex-direction: column;
+            align-items: center; 
+            justify-content: center; 
+            height: 100vh; 
+            margin: 0; 
+            text-align: center;
+            padding: 20px;
+        }
+        .logo { width: 100px; height: 100px; margin-bottom: 20px; background: white; border-radius: 15px; padding: 10px; }
+        .btn {
+            background-color: #2DCCCD; /* Aqua BBVA */
+            color: #004481;
+            padding: 15px 40px;
+            font-size: 18px;
+            font-weight: bold;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            text-decoration: none;
+            margin-top: 30px;
+            display: inline-block;
+        }
+        .instructions {
+            background: rgba(255,255,255,0.1);
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            max-width: 400px;
+        }
     </style>
 </head>
 <body>
-    <h3>Cargando App...</h3>
+
+    <div style="font-size: 40px; font-weight: bold; margin-bottom: 20px;">BBVA</div>
+
+    <div id="browser-view">
+        <div class="instructions">
+            <p><strong>Para instalar la App:</strong></p>
+            <p>1. Presiona opciones del navegador (⋮ o icono compartir).</p>
+            <p>2. Selecciona <strong>"Agregar a pantalla de inicio"</strong>.</p>
+        </div>
+        <p>Si ya la instalaste, úsala desde tu pantalla de inicio.</p>
+        
+        <a id="btn-entrar" href="#" class="btn">Entrar Web</a>
+    </div>
+
+    <div id="app-view" style="display:none;">
+        <h3>Iniciando Aplicación...</h3>
+        <div class="spinner" style="border: 4px solid #f3f3f3; border-top: 4px solid #2DCCCD; border-radius: 50%; width: 40px; height: 40px; animation: spin 1s linear infinite; margin: 20px auto;"></div>
+    </div>
+
+    <style>@keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }</style>
 
     <script>
-        // --- AQUÍ PEGA TU LINK DE APPS SCRIPT (EL QUE TERMINA EN /exec) ---
-        const urlDestino = "https://script.google.com/a/macros/bbva.com/s/AKfycby5r7wYFEJsZPVvxt7257A8vEs4VIE3ICENIdL3woLwe4wUEwChEjxkxkeycYLev8rsTQ/exec"; 
+        // --- PEGA AQUÍ TU URL DE APPS SCRIPT ---
+        const scriptUrl = "https://script.google.com/a/macros/bbva.com/s/AKfycby5r7wYFEJsZPVvxt7257A8vEs4VIE3ICENIdL3woLwe4wUEwChEjxkxkeycYLev8rsTQ/exec 
+"; 
         
-        // Esto hace la magia: redirige inmediatamente
-        window.location.replace(urlDestino);
+        document.getElementById('btn-entrar').href = scriptUrl;
+
+        // Detectar si está en modo pantalla completa (App instalada)
+        const isStandalone = window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone;
+
+        if (isStandalone) {
+            // Si es App: Ocultar instrucciones y redirigir
+            document.getElementById('browser-view').style.display = 'none';
+            document.getElementById('app-view').style.display = 'block';
+            
+            setTimeout(() => {
+                window.location.replace(scriptUrl);
+            }, 100); // Pequeña pausa para asegurar carga
+        } 
+        // Si NO es App (es navegador), se queda quieto mostrando las instrucciones
     </script>
+
 </body>
 </html>
+
