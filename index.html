@@ -14,9 +14,9 @@
 
     <style>
         body { 
-            background-color: #004481; 
+            background-color: #004481; /* Azul BBVA */
             color: white; 
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            font-family: sans-serif;
             display: flex; 
             flex-direction: column;
             align-items: center; 
@@ -24,74 +24,49 @@
             height: 100vh; 
             margin: 0; 
             text-align: center;
-            padding: 20px;
         }
-        .logo { width: 100px; height: 100px; margin-bottom: 20px; background: white; border-radius: 15px; padding: 10px; }
-        .btn {
-            background-color: #2DCCCD; /* Aqua BBVA */
-            color: #004481;
-            padding: 15px 40px;
-            font-size: 18px;
-            font-weight: bold;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-            text-decoration: none;
-            margin-top: 30px;
-            display: inline-block;
-        }
-        .instructions {
-            background: rgba(255,255,255,0.1);
-            padding: 20px;
-            border-radius: 10px;
+        /* Spinner de carga */
+        .spinner {
+            border: 4px solid rgba(255,255,255,0.3);
+            border-top: 4px solid #2DCCCD; /* Aqua BBVA */
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            animation: spin 1s linear infinite;
             margin-bottom: 20px;
-            max-width: 400px;
         }
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+        
+        .logo-text { font-size: 30px; font-weight: bold; margin-bottom: 10px; letter-spacing: 2px;}
+        .status-text { font-size: 14px; opacity: 0.8; }
     </style>
 </head>
 <body>
 
-    <div style="font-size: 40px; font-weight: bold; margin-bottom: 20px;">BBVA</div>
-
-    <div id="browser-view">
-        <div class="instructions">
-            <p><strong>Para instalar la App:</strong></p>
-            <p>1. Presiona opciones del navegador (⋮ o icono compartir).</p>
-            <p>2. Selecciona <strong>"Agregar a pantalla de inicio"</strong>.</p>
-        </div>
-        <p>Si ya la instalaste, úsala desde tu pantalla de inicio.</p>
-        
-        <a id="btn-entrar" href="#" class="btn">Entrar Web</a>
-    </div>
-
-    <div id="app-view" style="display:none;">
-        <h3>Iniciando Aplicación...</h3>
-        <div class="spinner" style="border: 4px solid #f3f3f3; border-top: 4px solid #2DCCCD; border-radius: 50%; width: 40px; height: 40px; animation: spin 1s linear infinite; margin: 20px auto;"></div>
-    </div>
-
-    <style>@keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }</style>
+    <div class="logo-text">BBVA</div>
+    <div class="spinner"></div>
+    <div class="status-text">Iniciando App...</div>
 
     <script>
-        // --- PEGA AQUÍ TU URL DE APPS SCRIPT ---
+        // --- PEGA TU URL DE APPS SCRIPT AQUÍ ---
         const scriptUrl = "https://script.google.com/a/macros/bbva.com/s/AKfycby5r7wYFEJsZPVvxt7257A8vEs4VIE3ICENIdL3woLwe4wUEwChEjxkxkeycYLev8rsTQ/exec"; 
-        
-        document.getElementById('btn-entrar').href = scriptUrl;
 
-        // Detectar si está en modo pantalla completa (App instalada)
+        // 1. Detectar si es App (iOS o Android Standalone)
         const isStandalone = window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone;
 
         if (isStandalone) {
-            // Si es App: Ocultar instrucciones y redirigir
-            document.getElementById('browser-view').style.display = 'none';
-            document.getElementById('app-view').style.display = 'block';
-            
+            // CASO IDEAL: Si el cel lo detecta, entra AL INSTANTE
+            window.location.replace(scriptUrl);
+        } else {
+            // CASO FALLBACK (Tu caso): 
+            // Espera 2.5 segundos (tiempo suficiente para ver el logo) y redirige forzosamente.
+            // Si alguien nuevo necesita instalarla, tiene esos 2.5s para darle a los 3 puntos.
             setTimeout(() => {
                 window.location.replace(scriptUrl);
-            }, 100); // Pequeña pausa para asegurar carga
-        } 
-        // Si NO es App (es navegador), se queda quieto mostrando las instrucciones
+            }, 2500); 
+        }
     </script>
-
 </body>
 </html>
+
 
